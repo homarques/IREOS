@@ -24,9 +24,9 @@ public class Main {
 
 		/* Count the number of observations in the dataset */
 		BufferedReader reader = new BufferedReader(new FileReader(solutions[0]));
-		int datasetLength = 0;
+		int datasetSize = 0;
 		while (reader.readLine() != null) {
-			datasetLength++;
+			datasetSize++;
 		}
 
 		/* Read all the solutions from the files and add in the list of vector */
@@ -35,7 +35,7 @@ public class Main {
 			String line = null;
 			reader = new BufferedReader(new FileReader(solutions[i]));
 
-			int detection[] = new int[datasetLength];
+			int detection[] = new int[datasetSize];
 			outlierID = 0;
 			while ((line = reader.readLine()) != null) {
 				if (line.equals("\"outlier\"")) {
@@ -49,12 +49,12 @@ public class Main {
 		}
 		reader.close();
 
-		/* Create the dataset model */
-		SVMExamples examples = new SVMExamples(new BufferedReader(
-				new FileReader(DATA)), datasetLength, 1000);
+		/* Create dataset model */
+		SVMExamples dataset = new SVMExamples(new BufferedReader(
+				new FileReader(DATA)), datasetSize, 1000);
 
 		/* Initialize IREOS using the dataset and the solutions to be evaluated */
-		IREOS ireos = new IREOS(examples, ireosSolutions);
+		IREOS ireos = new IREOS(dataset, ireosSolutions);
 
 		/* Find the gamma maximum */
 		ireos.findGammaMax();
@@ -68,19 +68,20 @@ public class Main {
 		/* Set the maximum clump size */
 		ireos.setmCl(1);
 		/* Evaluate the solutions */
-		List<IREOSSolution> IS = ireos.evaluateSolutions();
+		List<IREOSSolution> evaluatedSolutions = ireos.evaluateSolutions();
 		/* Compute IREOS statistics to this dataset */
 		IREOSStatistics stats = ireos.getStatistics();
 		/* Print the results */
-		for (int i = 0; i < IS.size(); i++) {
-			IS.get(i).setStatistics(stats);
+		for (int i = 0; i < evaluatedSolutions.size(); i++) {
+			/* Set the IREOS statistics to the solution */
+			evaluatedSolutions.get(i).setStatistics(stats);
 			System.out.println("------------------------------------");
 			System.out.println("Solution: " + solutions[i]);
 			System.out.println("Adjusted IREOS: "
-					+ IS.get(i).getAdjustedIREOS());
-			System.out.println("IREOS: " + IS.get(i).getIREOS());
-			System.out.println("z-test: " + IS.get(i).zTest());
-			System.out.println("t-test: " + IS.get(i).tTest());
+					+ evaluatedSolutions.get(i).getAdjustedIREOS());
+			System.out.println("IREOS: " + evaluatedSolutions.get(i).getIREOS());
+			System.out.println("z-test: " + evaluatedSolutions.get(i).zTest());
+			System.out.println("t-test: " + evaluatedSolutions.get(i).tTest());
 			System.out.println("------------------------------------");
 		}
 
