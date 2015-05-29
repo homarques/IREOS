@@ -1,5 +1,3 @@
-/* Modified by Henrique O. Marques on May 2015 to use method getTrain_size() instead of count_examples() */
-
 /*
  *  RapidMiner
  *
@@ -29,7 +27,6 @@ import java.io.Serializable;
 import com.rapidminer.operator.learner.functions.kernel.jmysvm.examples.SVMExample;
 import com.rapidminer.operator.learner.functions.kernel.jmysvm.examples.SVMExamples;
 import com.rapidminer.operator.learner.functions.kernel.jmysvm.util.Cache;
-
 
 
 /**
@@ -92,7 +89,7 @@ public abstract class Kernel implements Serializable {
 	 */
 	public void init(SVMExamples examples, int cacheSizeMB) {
 		the_examples = examples;
-		examples_total = the_examples.getTrain_size();
+		examples_total = the_examples.count_examples();
 		dim = the_examples.get_dim();
 		init_kernel_cache(cacheSizeMB);
 	};
@@ -178,11 +175,9 @@ public abstract class Kernel implements Serializable {
 			if (result == null) {
 				result = new double[examples_total];
 			};
-			
 			calculate_K_row(result, i);
 			kernel_cache.put_element(i, result);
 		};
-
 		return result;
 	};
 
@@ -199,8 +194,8 @@ public abstract class Kernel implements Serializable {
 		if (kernel_cache_size < 1) {
 			kernel_cache_size = 1;
 		};
-		if (kernel_cache_size > the_examples.getTrain_size()) {
-			kernel_cache_size = the_examples.getTrain_size();
+		if (kernel_cache_size > the_examples.count_examples()) {
+			kernel_cache_size = the_examples.count_examples();
 		};
 		kernel_cache = new Cache(kernel_cache_size, examples_total);
 	};

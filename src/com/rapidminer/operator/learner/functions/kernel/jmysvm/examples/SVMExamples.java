@@ -467,6 +467,15 @@ public class SVMExamples implements Serializable {
 	public void set_b(double new_b) {
 		b = new_b;
 	}
+	
+	/**
+	 * Counts the training examples.
+	 * 
+	 * @return Number of examples
+	 */
+	public int count_examples() {
+		return train_size;
+	}
 
 	/**
 	 * sets an alpha value.

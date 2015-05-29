@@ -8,6 +8,24 @@ H.O. Marques, R.J.G.B. Campello, A. Zimek and J. Sander. On the Internal Evaluat
 Included in this distribution is an example data set (WBC_withoutdupl_norm) which consists of 223 objects, each with 9 attributes, this data set is a publicly available real world datasets from the UCI repository modified following the procedure described in the paper.
 Also included are 11 outlier solutions of the data set (folder solutions) which the name of the file is the number of outliers correctly labeled according to the ground truth.
 
+
+DISCLAIMERS RAPIDMINER LICENSE:
+================================
+
+	This work uses pieces of RapidMiner code and part of them were modified. RapidMiner is a free software distribute under the terms of the GNU Affero General Public License, and the modifications were made under the terms of license. Below are the RapidMiner classes used and the modifications performed:  
+	
+	Unmodified classes:
+		-com.rapidminer.operator.learner.functions.kernel.jmysvm.examples.SVMExample.java
+		-com.rapidminer.operator.learner.functions.kernel.jmysvm.kernel.Kernel.java
+		-com.rapidminer.operator.learner.functions.kernel.jmysvm.kernel.KernelRadial.java
+		-com.rapidminer.operator.learner.functions.kernel.jmysvm.util.Cache.java
+
+	Modified classes:
+		-com.rapidminer.parameter.value.ParameterValueGrid.java - This class was modified on May 2015 in order not to work with operators.
+		-com.rapidminer.operator.learner.functions.kernel.logistic.KLR.java - This class was modified on May 2015 in order to work with individual cost weights for each data instances and to not work with operators.
+		-com.rapidminer.operator.learner.functions.kernel.jmysvm.examples.SVMExamples.java - This class was modified on May 2015 in order to work with individual cost weights for each data instances, removed unused methods and created a method to read a dataset from the given plain text file where the attributes are separated by single spaces.
+
+
 Usage:
 ======
 
