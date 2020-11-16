@@ -26,6 +26,8 @@ public class IREOSSolution {
 	private NormalDistribution normal = new NormalDistribution();
 	/* Student's t-distribution from Apache Math to perform t-test */
 	private TDistribution t;
+	
+	private int n = -1;
 
 	/**
 	 * Constructor class
@@ -36,7 +38,10 @@ public class IREOSSolution {
 	public IREOSSolution(IREOSExample[] examples) {
 		this.examples = examples;
 		this.gammaMax = examples[0].getGammas()[(examples[0].getGammas().length - 1)];
-		t = new TDistribution(examples.length - 1);
+		if(examples.length  > 1)
+			t = new TDistribution(examples.length - 1);
+		else
+			t = new TDistribution(1);
 	}
 
 	/**
@@ -105,7 +110,7 @@ public class IREOSSolution {
 	public double zTest() throws Exception {
 		if (statistics != null) {
 			double zscore = (getAUC() - statistics.getExpectedValue())
-					/ Math.sqrt(statistics.getVariance());
+					/ Math.sqrt(statistics.getVariance(n));
 			return normal.cumulativeProbability(1 - zscore);
 		} else
 			throw new Exception(
@@ -122,7 +127,7 @@ public class IREOSSolution {
 	public double tTest() throws Exception {
 		if (statistics != null) {
 			double tscore = (getAUC() - statistics.getExpectedValue())
-					/ Math.sqrt(statistics.getVariance());
+					/ Math.sqrt(statistics.getVariance(n));
 			return t.cumulativeProbability(1 - tscore);
 		} else
 			throw new Exception(
@@ -163,6 +168,14 @@ public class IREOSSolution {
 	 */
 	public void setStatistics(IREOSStatistics statistics) {
 		this.statistics = statistics;
+	}
+
+	public int getn() {
+		return n;
+	}
+
+	public void setn(int n) {
+		this.n = n;
 	}
 
 }
