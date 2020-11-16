@@ -18,8 +18,6 @@ public class IREOSStatistics {
 	private double expectedValue = -1;
 	/* IREOS index variance */
 	private double variance = -1;
-	/* Number of outliers in the dataset */
-	private int n = -1;
 	/*
 	 * List of all observation separalities used to compute the variance, each
 	 * list element represent all the separabilities for the correspondent gamma
@@ -34,9 +32,8 @@ public class IREOSStatistics {
 	 * @param n
 	 *            Number of outliers in the dataset
 	 */
-	public IREOSStatistics(IREOSExample[] examples, int n) {
+	public IREOSStatistics(IREOSExample[] examples) {
 		this.examples = examples;
-		this.n = n;
 		getSeparabilities();
 	}
 
@@ -94,30 +91,27 @@ public class IREOSStatistics {
 	/**
 	 * Get and compute the IREOS index variance
 	 */
-	public double getVariance() {
-		if (variance == -1) {
-
-			Covariance covariances = new Covariance();
-			double[] x = examples[0].getGammas();
-			List<double[]> y = separabilitiesList;
-			variance = 0;
-			for (int i = 1; i < x.length; i++) {
-				for (int j = 1; j < x.length; j++) {
-					variance += (x[i] - x[(i - 1)])
-							* (x[j] - x[(j - 1)])
-							* ((covariances.covariance(y.get(i), y.get(j)) / n)
-									+ (covariances.covariance(y.get(i),
-											y.get(j - 1)) / n)
-									+ (covariances.covariance(y.get(i - 1),
-											y.get(j)) / n) + (covariances
-									.covariance(y.get(i - 1), y.get(j - 1)) / n));
-				}
+	public double getVariance(int n) {
+		Covariance covariances = new Covariance();
+		double[] x = examples[0].getGammas();
+		List<double[]> y = separabilitiesList;
+		variance = 0;
+		for (int i = 1; i < x.length; i++) {
+			for (int j = 1; j < x.length; j++) {
+				variance += (x[i] - x[(i - 1)])
+						* (x[j] - x[(j - 1)])
+						* ((covariances.covariance(y.get(i), y.get(j)) / n)
+								+ (covariances.covariance(y.get(i),
+										y.get(j - 1)) / n)
+								+ (covariances.covariance(y.get(i - 1),
+										y.get(j)) / n) + (covariances
+								.covariance(y.get(i - 1), y.get(j - 1)) / n));
 			}
-			variance *= 0.25;
-			/* Apply the finite population correction (fpc) factor */
-			double fpc = (double) (examples.length - n) / (examples.length - 1);
-			variance = fpc * variance;
 		}
+		variance *= 0.25;
+		/* Apply the finite population correction (fpc) factor */
+		double fpc = (double) (examples.length - n) / (examples.length - 1);
+		variance = fpc * variance;
 
 		return variance;
 	}
